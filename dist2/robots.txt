@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin-page
+Disallow: /admin-detail/
+Disallow: /create-profile
+Disallow: /create-blogs
