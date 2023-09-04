@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../contexts/userContext";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useMutation } from '@tanstack/react-query';
 import axios from "axios";
+import { usePostBlogsApi } from "../apis/usePostBlogsApi";
 const CreateBlogForm = () => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
-  const [userCredentials, setUserCredentials] = useState<{
+  const [blogCredentials, setblogCredentials] = useState<{
     title: String,
     description: String
   }>({
@@ -17,29 +19,20 @@ const CreateBlogForm = () => {
   });
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
-    setUserCredentials((prevState) => ({ ...prevState, [name]: value }));
+    setblogCredentials((prevState) => ({ ...prevState, [name]: value }));
   };
-  const handleOnSubmit = async (e: any) => {
-    e.preventDefault();
-    console.log(userCredentials);
-    console.log(token);
-    try {
-      const res = await axios.post(
-        "https://pern-backend-blog-server.onrender.com/api/create-post",
-        {
-          title: userCredentials.title,
-          description: userCredentials.description,
-        },
-        {
-          headers: {
-            Authorization: `${user?.token}`,
-          },
-        }
-      );
-      console.log(res)
-      if (res.status === 200) {
+  const { mutate } = useMutation(()=> usePostBlogsApi(blogCredentials, user), {
+    onSuccess: (data) => {
+      if (data.status === 200) {
         navigate("/blogs");
       }
+    }
+  })
+  const handleOnSubmit = async (e: any) => {
+    e.preventDefault();
+     
+    try {
+      mutate();
     } catch (error: any) {
       console.log(error.message);
     }

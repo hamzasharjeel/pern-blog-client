@@ -1,29 +1,30 @@
 import {useState} from 'react'
 import { useUser } from '../contexts/userContext'
 import { Link, useNavigate } from 'react-router-dom' 
-import axios from 'axios';
+import { useMutation } from '@tanstack/react-query'
+import { usePostAdminSignInApi } from '../apis/usePostAdminSignUpApi';
 const AdminSignUpForm = () => {
-    const {user, setUser} = useUser();
     const navigate = useNavigate();
-    const [userCredentials, setUserCredentials] = useState<{ email: String, password: String}>({
+    const [adminCredentials, setAdminCredentials] = useState<{ email: String, password: String}>({
         email: '',
         password: ''
     });
+    const { mutate } = useMutation(usePostAdminSignInApi, {
+      onSuccess: (data) => {
+        if(data.status === 200){
+          navigate('/admin-page');
+      }
+      }
+    })
     const handleOnChange = (e: any) => {
         const { name, value } = e.target;
-        setUserCredentials(prevState => ({...prevState, [name]: value}));
+        setAdminCredentials(prevState => ({...prevState, [name]: value}));
     }
     const handleOnSubmit = async(e: any) => {
         e.preventDefault();
-        console.log(userCredentials)
+        console.log(adminCredentials)
         try {
-            const res = await axios.post('https://pern-backend-blog-server.onrender.com/api/signin', {
-                email: userCredentials.email,
-                password: userCredentials.password,
-            });
-            if(res.status === 200){
-                navigate('/admin-page');
-            }
+            mutate(adminCredentials);
 
         } catch (error: any) {
             console.log(error.message);

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useUser } from '../contexts/userContext';
 import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
-import CreateProfilePage from './CreateProfilePage';
 
 const BlogDetail = ({user}: any) => {
     const [blog, setBlog] = useState<{title: String, description: String, id: Number }>({

@@ -1,42 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { useUser } from '../contexts/userContext';
-import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
-import CreateProfilePage from './CreateProfilePage';
+import useGetAdminDetailsApi from '../apis/useGetAdminDetailsApi';
+import { useQuery } from '@tanstack/react-query';
 
 const AdmindetailPage = ({user}: any) => {
-    const [admin, setAdmin] = useState<{email: String, password: String, isAdmin: Boolean, id: Number }>({
-        email: '', password: '', isAdmin: false, id: 0
-    });
-    const [error, setError] = useState<Boolean>(false);
-    const [loader, setLoader] = useState<Boolean>(true);
     const {id} = useParams();
-    
-    useEffect(()=>{
-        const fetchAdmin = async ()=> {
-            try {
-                const admin = await axios.get('https://pern-backend-blog-server.onrender.com/api/admins/' + id, {
-                    headers: {
-                        Authorization: `${user?.token}`
-                    }
-                });
-                console.log(admin, 'iam')
-                setAdmin(admin.data.admin);
-                setLoader(false);
-            } catch (error: any) {
-                console.log(error.message);
-                setError(false);
-            }
-        }
-        fetchAdmin();
-    },[]);
+    const {data: admin, isLoading, isError} = useQuery(["admin-details", id], ()=> useGetAdminDetailsApi(id, user), {
+        enabled: !!id 
+    });
     if(!user || !user.user.isAdmin){
         return <Navigate to='/admin-signin'/>
     }
-    if(loader){
+    if(isLoading){
         return <>loading...</>
     }
-    else if(error){
+    else if(isError){
         return <>erorr..</>
     }
   return (

@@ -3,14 +3,13 @@ import { useUser } from "../contexts/userContext";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useProfile } from "../contexts/profileContext";
+import { usePostProfileApi } from "../apis/usePostProfileApi";
+import { useMutation } from '@tanstack/react-query';
 const ProfileCreate = () => {
-  const { profile, setProfile } = useProfile();
+  const { setProfile } = useProfile();
   const { user } = useUser();
   const navigate = useNavigate();
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
-  const [userCredentials, setUserCredentials] = useState<{
+  const [profileCredentials, setProfileCredentials] = useState<{
     status: String;
     profesion: String;
     age: String;
@@ -19,33 +18,23 @@ const ProfileCreate = () => {
     status: "",
     age: "",
   });
+  const { mutate } = useMutation(() => usePostProfileApi(profileCredentials, user), {
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        setProfile(data);
+        navigate("/profile");
+      }
+    }
+  })
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
-    setUserCredentials((prevState) => ({ ...prevState, [name]: value }));
+    setProfileCredentials((prevState) => ({ ...prevState, [name]: value }));
   };
   const handleOnSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(userCredentials);
-    console.log(token);
     try {
-      const res = await axios.post(
-        "https://pern-backend-blog-server.onrender.com/api/create-profile",
-        {
-          status: userCredentials.status,
-          profesion: userCredentials.profesion,
-          age: userCredentials.age,
-        },
-        {
-          headers: {
-            Authorization: `${user?.token}`,
-          },
-        }
-      );
-      console.log(res)
-      if (res.status === 200) {
-        setProfile(res);
-        navigate("/profile");
-      }
+      mutate();
+      
     } catch (error: any) {
       console.log(error.message);
     }

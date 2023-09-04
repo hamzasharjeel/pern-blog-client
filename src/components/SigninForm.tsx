@@ -1,9 +1,16 @@
 import {useState} from 'react'
-import { useUser } from '../contexts/userContext'
-import { Link, useNavigate } from 'react-router-dom' 
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom'
+import { useMutation } from "@tanstack/react-query";
+
+import { usePostSignInApi } from '../apis/usePostSignInApi';
 const SignInForm = () => {
-    const {user, setUser} = useUser();
+    const { mutate } = useMutation(usePostSignInApi, {
+      onSuccess: (data) => {
+        if (data.status === 200) {
+          navigate("/users");
+        }
+      }
+    })
     const navigate = useNavigate();
     const [userCredentials, setUserCredentials] = useState<{ email: String, password: String}>({
         email: '',
@@ -15,15 +22,9 @@ const SignInForm = () => {
     }
     const handleOnSubmit = async(e: any) => {
         e.preventDefault();
-        console.log(userCredentials)
+        console.log(userCredentials);
         try {
-            const res = await axios.post('https://pern-backend-blog-server.onrender.com/api/signin', {
-                email: userCredentials.email,
-                password: userCredentials.password,
-            });
-            if(res.status === 200){
-                navigate('/users');
-            }
+          mutate(userCredentials);
 
         } catch (error: any) {
             console.log(error.message);
