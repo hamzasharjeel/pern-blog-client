@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
+import { Skeleton, message  } from 'antd';
 
 const BlogDetail = ({user}: any) => {
     const [blog, setBlog] = useState<{title: String, description: String, id: Number }>({
@@ -22,7 +23,7 @@ const BlogDetail = ({user}: any) => {
                 setBlog(blog.data.post);
                 setLoader(false);
             } catch (error: any) {
-                console.log(error.message);
+                message.error(error.message);
                 setError(false);
             }
         }
@@ -31,11 +32,8 @@ const BlogDetail = ({user}: any) => {
     if(!user){
         return <Navigate to='/signup'/>
     }
-    if(loader){
-        return <>loading...</>
-    }
-    else if(error){
-        return <>erorr..</>
+    else if(loader){
+        return <Skeleton/>;
     }
   return (
     <div>

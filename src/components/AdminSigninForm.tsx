@@ -3,15 +3,17 @@ import { useUser } from '../contexts/userContext'
 import { Link, useNavigate } from 'react-router-dom' 
 import { useMutation } from '@tanstack/react-query'
 import { usePostAdminSignInApi } from '../apis/usePostAdminSignUpApi';
+import { Skeleton, message  } from 'antd';
 const AdminSignUpForm = () => {
     const navigate = useNavigate();
     const [adminCredentials, setAdminCredentials] = useState<{ email: String, password: String}>({
         email: '',
         password: ''
     });
-    const { mutate } = useMutation(usePostAdminSignInApi, {
+    const { mutate, isLoading, isError } = useMutation(usePostAdminSignInApi, {
       onSuccess: (data) => {
         if(data.status === 200){
+          message.success("admin registered successfully");
           navigate('/admin-page');
       }
       }
@@ -28,13 +30,16 @@ const AdminSignUpForm = () => {
 
         } catch (error: any) {
             console.log(error.message);
+            message.error(error.message);
         }
+    }
+    if(isLoading){
+      return <Skeleton/>
     }
   return (
     <div>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
   </div>
   <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

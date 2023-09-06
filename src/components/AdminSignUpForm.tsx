@@ -3,6 +3,8 @@ import { useUser } from "../contexts/userContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { usePostAdminSignInApi } from "../apis/usePostAdminSignUpApi";
+import { Skeleton, message  } from 'antd';
+
 
 const AdminSignUpForm = () => {
   const { user, setUser } = useUser();
@@ -16,11 +18,12 @@ const AdminSignUpForm = () => {
     email: "",
     password: "",
   });
-  const { mutate } = useMutation(usePostAdminSignInApi, {
+  const { mutate, isLoading } = useMutation(usePostAdminSignInApi, {
     onSuccess: (data) => {
       setUser(data.data);
       localStorage.setItem("token", JSON.stringify(data.data.token));
       navigate("/admin-signin");
+      message.success("admin logged in as success");
     },
   });
   const handleOnChange = (e: any) => {
@@ -29,23 +32,21 @@ const AdminSignUpForm = () => {
   };
   const handleOnSubmit = async (e: any) => {
     e.preventDefault();
-    mutate(adminCredentials)
     console.log(adminCredentials);
     try {
+      mutate(adminCredentials)
     } catch (error: any) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
-
+if(isLoading){
+  return <Skeleton/>;
+}
   return (
     <div>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
+          
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>

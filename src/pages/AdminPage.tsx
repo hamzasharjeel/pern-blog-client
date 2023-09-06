@@ -1,6 +1,7 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useGetAdminsApi from "../apis/useGetAdminsApi";
+import { Skeleton, message  } from 'antd';
 
 const AdminPage = ({ user }: any) => {
   const {
@@ -14,7 +15,7 @@ const AdminPage = ({ user }: any) => {
   if (!user || !user?.user?.isAdmin) {
     return <Navigate to="/admin-signin" />;
   } else if (isLoading) {
-    return <>loading...</>;
+    return <Skeleton />;
   } else if (isError) {
     return <>erorr..</>;
   }

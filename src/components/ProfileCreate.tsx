@@ -5,6 +5,8 @@ import axios from "axios";
 import { useProfile } from "../contexts/profileContext";
 import { usePostProfileApi } from "../apis/usePostProfileApi";
 import { useMutation } from '@tanstack/react-query';
+import { Skeleton, message  } from 'antd';
+
 const ProfileCreate = () => {
   const { setProfile } = useProfile();
   const { user } = useUser();
@@ -18,11 +20,12 @@ const ProfileCreate = () => {
     status: "",
     age: "",
   });
-  const { mutate } = useMutation(() => usePostProfileApi(profileCredentials, user), {
+  const { mutate, isLoading } = useMutation(() => usePostProfileApi(profileCredentials, user), {
     onSuccess: (data) => {
       if (data.status === 200) {
         setProfile(data);
         navigate("/profile");
+        message.success('profile created as success');
       }
     }
   })
@@ -36,22 +39,21 @@ const ProfileCreate = () => {
       mutate();
       
     } catch (error: any) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
   if(!user){
     return <Navigate to='/signup'/>
+  }
+  else if(isLoading){
+    return <Skeleton/>
   }
 
   return (
     <div>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
+          
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             create your profile
           </h2>

@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useGetUsersApi from "../apis/useGetUsersApi";
 import { useQuery } from '@tanstack/react-query';
+import { Skeleton, message  } from 'antd';
 
 const Userspage = ({ user }: any) => {
   const {
@@ -17,9 +18,9 @@ const Userspage = ({ user }: any) => {
   if (!user) {
     return <Navigate to="/signin" />;
   } else if (isLoading) {
-    return <>loading...</>;
+    return <Skeleton/>;
   } else if (isError) {
-    return <>erorr..</>;
+    return message.error("error");
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4">

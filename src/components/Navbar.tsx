@@ -1,6 +1,7 @@
 import React from 'react'
 import { useUser } from '../contexts/userContext'
 import { Link } from 'react-router-dom'
+import { Button } from 'antd'
 const Navbar = () => {
     const {user, setUser} = useUser();
     console.log(user);
@@ -21,25 +22,22 @@ const Navbar = () => {
     </nav>
     {
         user === null ? <div className='gap-5 flex justify-between'>
-        <Link to='/signup' className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+          <Button className='bg-white'>
+            <Link to='/signup'>
             signup as user
-        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4 ml-1" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
       </Link>
-      <Link to='admin-signup' className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">signup as an admin
-        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4 ml-1" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
+          </Button>
+        <Button className='bg-white'>
+           <Link to='admin-signup'>signup as an admin
+        
       </Link>
+        </Button>
+     
         </div>: <>
-        <button onClick={_=> setUser(null)} className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+        <Button onClick={_=> setUser(null)} className="bg-white">
         logout
-        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4 ml-1" viewBox="0 0 24 24">
-            
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
-      </button>
+        
+      </Button>
       
         </>
     }

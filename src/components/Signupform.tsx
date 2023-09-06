@@ -4,13 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { usePostSignupApi } from "../apis/usePostSignUpApi";
+import { Skeleton, message  } from 'antd';
+
 const Signupform = () => {
   const { user, setUser } = useUser();
-  const { mutate } = useMutation(usePostSignupApi, {
+  const { mutate, isLoading } = useMutation(usePostSignupApi, {
     onSuccess: (data) => {
       setUser(data);
       localStorage.setItem("token", JSON.stringify(data.token));
       navigate("/signin");
+      message.success('user signed in as success');
     },
   });
   const navigate = useNavigate();
@@ -32,22 +35,16 @@ const Signupform = () => {
     try {
       mutate(userCredentials);
     } catch (error: any) {
-      console.log(error.message);
+      message.error(error.message);
     }
-    console.log(userCredentials);
   };
-  useEffect(() => {
-    console.log(localStorage.getItem("token"));
-  }, [user]);
+  if(isLoading){
+    return <Skeleton/>
+  }
   return (
     <div>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
