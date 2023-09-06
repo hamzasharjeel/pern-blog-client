@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useGetAdminsApi from "../apis/useGetAdminsApi";
-import { Skeleton, message  } from 'antd';
+import { Skeleton, Alert  } from 'antd';
 
 const AdminPage = ({ user }: any) => {
   const {
@@ -17,7 +17,12 @@ const AdminPage = ({ user }: any) => {
   } else if (isLoading) {
     return <Skeleton />;
   } else if (isError) {
-    return <>erorr..</>;
+    return <Alert
+    message="Error Text"
+    description="Error Description Error Description Error Description Error Description Error Description Error Description"
+    type="error"
+    closable
+  />;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4">

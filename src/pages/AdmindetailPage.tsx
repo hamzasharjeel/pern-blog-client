@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router-dom';
 import useGetAdminDetailsApi from '../apis/useGetAdminDetailsApi';
 import { useQuery } from '@tanstack/react-query';
-import { Skeleton, message  } from 'antd';
+import { Skeleton, Alert  } from 'antd';
 
 const AdmindetailPage = ({user}: any) => {
     const {id} = useParams();
@@ -11,11 +11,16 @@ const AdmindetailPage = ({user}: any) => {
     if(!user || !user.user.isAdmin){
         return <Navigate to='/admin-signin'/>;
     }
-    if(isLoading){
+    else if(isLoading){
         return <Skeleton />;
     }
-    else if(isError){
-        return message.error("error");
+    else if (isError) {
+      return <Alert
+      message="Error Text"
+      description="Error Description Error Description Error Description Error Description Error Description Error Description"
+      type="error"
+      closable
+    />;
     }
   return (
     <div>

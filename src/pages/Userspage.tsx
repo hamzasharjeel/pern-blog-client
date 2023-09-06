@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useUser } from "../contexts/userContext";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, Navigate } from "react-router-dom";
 import useGetUsersApi from "../apis/useGetUsersApi";
 import { useQuery } from '@tanstack/react-query';
-import { Skeleton, message  } from 'antd';
+import { Skeleton, Alert  } from 'antd';
 
 const Userspage = ({ user }: any) => {
   const {
@@ -20,7 +17,12 @@ const Userspage = ({ user }: any) => {
   } else if (isLoading) {
     return <Skeleton/>;
   } else if (isError) {
-    return message.error("error");
+    return <Alert
+    message="Error Text"
+    description="Error Description Error Description Error Description Error Description Error Description Error Description"
+    type="error"
+    closable
+  />;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4">

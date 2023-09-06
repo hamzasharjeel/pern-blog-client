@@ -2,13 +2,14 @@ import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useGetBlogsApi from "../apis/useGetBlogsApi";
 import { Skeleton, message  } from 'antd';
+import { Alert } from 'antd';
 
 const Blogs = ({ user }: any) => {
   const {
     data: blogs,
     isLoading,
     isError,
-  } = useQuery(["admin-page"], () => useGetBlogsApi(user), {
+  } = useQuery(["blog-page"], () => useGetBlogsApi(user), {
     enabled: !!user,
   });
 
@@ -17,7 +18,12 @@ const Blogs = ({ user }: any) => {
   } else if (isLoading) {
     return <Skeleton/>;
   } else if (isError) {
-    return message.error("error");
+    return <Alert
+    message="Error Text"
+    description="Error Description Error Description Error Description Error Description Error Description Error Description"
+    type="error"
+    closable
+  />;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
